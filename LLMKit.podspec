@@ -9,26 +9,17 @@
 Pod::Spec.new do |s|
   s.name             = 'LLMKit'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of LLMKit.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.summary          = 'LLMKit is a CocoaPod wrapper around LLM.swift and specific models'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+LLMKit is a CocoaPod wrapper around LLM.swift and specific models
                        DESC
 
-  s.homepage         = 'https://github.com/Francis Li/LLMKit'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.homepage         = 'https://github.com/peakresponse/peak-ios-llmkit'
+  s.license          = { :type => 'LGPL-2.1', :file => 'LICENSE.md' }
   s.author           = { 'Francis Li' => 'mail@francisli.com' }
-  s.source           = { :git => 'https://github.com/Francis Li/LLMKit.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.source           = { :git => 'https://github.com/peakresponse/peak-ios-llmkit.git', :tag => s.version.to_s }
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '15.5'
 
   s.source_files = 'LLMKit/Classes/**/*'
   
@@ -39,4 +30,5 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+  s.spm_dependency 'LLM/LLM'
 end

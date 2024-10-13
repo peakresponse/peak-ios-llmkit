@@ -1,13 +1,12 @@
 use_frameworks!
 
-platform :ios, '10.0'
+platform :ios, '15.5'
 
 target 'LLMKit_Example' do
   pod 'LLMKit', :path => '../'
+  spm_pkg "LLM", :url => "https://github.com/eastriverlee/LLM.swift.git", :branch => "pinned"
 
   target 'LLMKit_Tests' do
     inherit! :search_paths
-
-    
   end
 end
