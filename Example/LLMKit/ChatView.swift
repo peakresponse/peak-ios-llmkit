@@ -15,11 +15,11 @@ class Bot: LLM {
 
 struct ChatView: View {
     @ObservedObject var bot: Bot
-    @State var input = "Give me seven national flag emojis people use the most; You must include South Korea."
+    @State var input = ""
 
     init?(_ model: Model? = nil) {
         if let url = model?.downloadedURL {
-            let systemPrompt = "You are a sentient AI with emotions."
+            let systemPrompt = "You are an expert medical secretary."
             bot = Bot(from: url, template: .chatML(systemPrompt))
             return
         }

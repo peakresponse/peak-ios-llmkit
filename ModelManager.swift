@@ -37,14 +37,18 @@ public class ModelManager: NSObject, URLSessionDownloadDelegate {
         return try fileManager.contentsOfDirectory(at: modelDirectory, includingPropertiesForKeys: nil).filter{ $0.pathExtension.localizedLowercase == "gguf" }
     }
 
-    public var allDownloads: [URLSessionTask] {
+    public var allDownloadTasks: [URLSessionTask] {
         get async {
             return await urlSession.allTasks
         }
     }
+    
+    public func delete(_ name: String) throws {
+        try fileManager.removeItem(at: URL(fileURLWithPath: name, relativeTo: modelDirectory))
+    }
 
     public func download(_ url: URL) async {
-        let tasks = await allDownloads
+        let tasks = await allDownloadTasks
         for task in tasks {
             if task.originalRequest?.url == url {
                 return
@@ -65,12 +69,11 @@ public class ModelManager: NSObject, URLSessionDownloadDelegate {
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         let destURL = URL(fileURLWithPath: downloadTask.originalRequest!.url!.lastPathComponent, relativeTo: modelDirectory)
-        print("done", location, "move to", destURL)
         try? fileManager.moveItem(at: location, to: destURL)
+        delegate?.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location)
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        print("progress", totalBytesWritten, totalBytesExpectedToWrite)
         delegate?.urlSession?(session, downloadTask: downloadTask, didWriteData: bytesWritten, totalBytesWritten: totalBytesWritten, totalBytesExpectedToWrite: totalBytesExpectedToWrite)
     }
 }
