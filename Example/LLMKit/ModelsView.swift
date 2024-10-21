@@ -6,6 +6,7 @@
 //  Copyright © 2024 CocoaPods. All rights reserved.
 //
 
+import LLM
 import LLMKit
 import SwiftUI
 
@@ -14,16 +15,18 @@ class Model: Identifiable {
     let id: String
     let name: String
     let url: String
+    let template: Template
     var isDownloaded: Bool
     var isDownloading: Bool
     var downloadedURL: URL?
     var bytesDownloaded: Int64 = 0
     var bytesExpected: Int64 = 0
 
-    init(id: String, name: String, url: String, isDownloaded: Bool, isDownloading: Bool) {
+    init(id: String, name: String, url: String, template: Template, isDownloaded: Bool, isDownloading: Bool) {
         self.id = id
         self.name = name
         self.url = url
+        self.template = template
         self.isDownloaded = isDownloaded
         self.isDownloading = isDownloading
     }
@@ -147,18 +150,98 @@ struct ModelsView: View {
                         id: "openhermes-2.5-mistral-7b.Q4_K_M.gguf",
                         name: "openhermes-2.5-mistral-7b.Q4_K_M.gguf",
                         url: "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf?download=true",
+                        template: .chatML("You are an expert medical secretary."),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "openhermes-2.5-mistral-7b.Q2_K.gguf",
+                        name: "openhermes-2.5-mistral-7b.Q2_K.gguf",
+                        url: "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q2_K.gguf?download=true",
+                        template: .chatML("You are an expert medical secretary."),
                         isDownloaded: false,
                         isDownloading: false),
                     Model(
                         id: "openbiollm-llama3-8b.Q4_K_M.gguf",
                         name: "openbiollm-llama3-8b.Q4_K_M.gguf",
                         url: "https://huggingface.co/aaditya/OpenBioLLM-Llama3-8B-GGUF/resolve/main/openbiollm-llama3-8b.Q4_K_M.gguf?download=true",
+                        template: .chatML("You are an expert medical secretary."),
                         isDownloaded: false,
                         isDownloading: false),
                     Model(
                         id: "meditron-7b.Q4_K_M.gguf",
                         name: "meditron-7b.Q4_K_M.gguf",
                         url: "https://huggingface.co/TheBloke/meditron-7B-GGUF/resolve/main/meditron-7b.Q4_K_M.gguf?download=true",
+                        template: Template(
+                            system: ("", "\n\n"),
+                            user: ("### User: ", "\n\n"),
+                            bot: ("### Assistant: ", "\n\n"),
+                            stopSequence: "###",
+                            systemPrompt: "You are an expert medical secretary."
+                        ),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "phi-2-meditron.q4_k_m.gguf",
+                        name: "phi-2-meditron.q4_k_m.gguf",
+                        url: "https://huggingface.co/afrideva/phi-2-meditron-GGUF/resolve/main/phi-2-meditron.q4_k_m.gguf?download=true",
+                        template: Template(
+                            user: ("### Instruction:\n", "\n\n"),
+                            bot: ("### Response:\n", "\n\n"),
+                            stopSequence: "###",
+                            systemPrompt: nil),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "phi-2-meditron.q2_k.gguf",
+                        name: "phi-2-meditron.q2_k.gguf",
+                        url: "https://huggingface.co/afrideva/phi-2-meditron-GGUF/resolve/main/phi-2-meditron.q2_k.gguf?download=true",
+                        template: Template(
+                            user: ("### Instruction:\n", "\n\n"),
+                            bot: ("### Response:\n", "\n\n"),
+                            stopSequence: "###",
+                            systemPrompt: nil),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "Phi-3-mini-4k-instruct-q4.gguf",
+                        name: "phi-3-mini-4k-instruct-q4.gguf",
+                        url: "https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf?download=true",
+                        template: Template(
+                            user: ("<|user|>", "<|end|>"),
+                            bot: ("<|assistant|>", "<|end|>"),
+                            stopSequence: "<|end|>",
+                            systemPrompt: nil),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "Phi-3.5-mini-instruct-Q4_K_M.gguf",
+                        name: "phi-3.5-mini-instruct-Q4_K_M.gguf",
+                        url: "https://huggingface.co/QuantFactory/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct.Q4_K_M.gguf?download=true",
+                        template: Template(
+                            system:("<|system|>", "<|end|>"),
+                            user: ("<|user|>", "<|end|>"),
+                            bot: ("<|assistant|>", "<|end|>"),
+                            stopSequence: "<|end|>",
+                            systemPrompt: "You are an expert medical secretary."),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "Phi-3.5-mini-instruct.Q2_K.gguf",
+                        name: "phi-3.5-mini-instruct.Q2_K.gguf",
+                        url: "https://huggingface.co/QuantFactory/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct.Q2_K.gguf?download=true",
+                        template: Template(
+                            system:("<|system|>", "<|end|>"),
+                            user: ("<|user|>", "<|end|>"),
+                            bot: ("<|assistant|>", "<|end|>"),
+                            stopSequence: "<|end|>",
+                            systemPrompt: "You are an expert medical secretary."),
+                        isDownloaded: false,
+                        isDownloading: false),
+                    Model(
+                        id: "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+                        name: "tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf",
+                        url: "https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf?download=true",
+                        template: .chatML("You are an expert medical secretary."),
                         isDownloaded: false,
                         isDownloading: false)
                 ]

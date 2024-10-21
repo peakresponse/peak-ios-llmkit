@@ -31,6 +31,9 @@ public class ModelManager: NSObject, URLSessionDownloadDelegate {
         if !fileManager.fileExists(atPath: modelDirectory.absoluteString) {
             try! fileManager.createDirectory(at: modelDirectory, withIntermediateDirectories: true)
         }
+        var resourceValues = try! modelDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey])
+        resourceValues.isExcludedFromBackup = true
+        try! modelDirectory.setResourceValues(resourceValues)
     }
     
     public func list() throws -> [URL] {
@@ -68,8 +71,11 @@ public class ModelManager: NSObject, URLSessionDownloadDelegate {
     }
     
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        let destURL = URL(fileURLWithPath: downloadTask.originalRequest!.url!.lastPathComponent, relativeTo: modelDirectory)
+        var destURL = URL(fileURLWithPath: downloadTask.originalRequest!.url!.lastPathComponent, relativeTo: modelDirectory)
         try? fileManager.moveItem(at: location, to: destURL)
+        var resourceValues = try! destURL.resourceValues(forKeys: [.isExcludedFromBackupKey])
+        resourceValues.isExcludedFromBackup = true
+        try! destURL.setResourceValues(resourceValues)
         delegate?.urlSession(session, downloadTask: downloadTask, didFinishDownloadingTo: location)
     }
     

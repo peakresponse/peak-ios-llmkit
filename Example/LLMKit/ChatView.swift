@@ -18,9 +18,8 @@ struct ChatView: View {
     @State var input = ""
 
     init?(_ model: Model? = nil) {
-        if let url = model?.downloadedURL {
-            let systemPrompt = "You are an expert medical secretary."
-            bot = Bot(from: url, template: .chatML(systemPrompt))
+        if let url = model?.downloadedURL, let template = model?.template {
+            bot = Bot(from: url, template: template, maxTokenCount: 200)
             return
         }
         return nil
