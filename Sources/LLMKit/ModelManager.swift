@@ -7,16 +7,17 @@
 
 import Foundation
 
-public class ModelManager: NSObject, URLSessionDownloadDelegate {
+public class ModelManager: NSObject, URLSessionDownloadDelegate, @unchecked Sendable {
     public static let shared = ModelManager()
 
-    public var backgroundSessionIdentifier = "ModelManager"
+    public let backgroundSessionIdentifier = "ModelManager"
     public var backgroundCompletionHandler: (() -> Void)?
     
     public weak var delegate: URLSessionDownloadDelegate?
 
-    var fileManager: FileManager
-    var modelDirectory: URL
+    let fileManager: FileManager
+    let modelDirectory: URL
+
     lazy var urlSession: URLSession = {
         let config = URLSessionConfiguration.background(withIdentifier: backgroundSessionIdentifier)
         config.isDiscretionary = true
@@ -27,13 +28,14 @@ public class ModelManager: NSObject, URLSessionDownloadDelegate {
     public override init() {
         fileManager = FileManager.default
         let applicationSupportDirectory = try! fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        modelDirectory = URL(fileURLWithPath: "models", relativeTo: applicationSupportDirectory)
+        var modelDirectory = URL(fileURLWithPath: "models", relativeTo: applicationSupportDirectory)
         if !fileManager.fileExists(atPath: modelDirectory.absoluteString) {
             try! fileManager.createDirectory(at: modelDirectory, withIntermediateDirectories: true)
         }
         var resourceValues = try! modelDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey])
         resourceValues.isExcludedFromBackup = true
         try! modelDirectory.setResourceValues(resourceValues)
+        self.modelDirectory = modelDirectory
     }
     
     public func list() throws -> [URL] {

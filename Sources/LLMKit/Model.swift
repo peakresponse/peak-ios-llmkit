@@ -10,7 +10,7 @@ import SwiftUI
 
 @Observable
 open class Model: Identifiable {
-    let id: String
+    public let id: String
     let name: String
     let url: String
     let template: Template
