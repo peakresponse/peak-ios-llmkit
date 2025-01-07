@@ -4,21 +4,27 @@
 import PackageDescription
 
 let package = Package(
-    name: "llmkit",
+    name: "LLMKit",
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "llmkit",
-            targets: ["llmkit"]),
+            name: "LLMKit",
+            targets: ["LLMKit"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/eastriverlee/LLM.swift", branch: "pinned")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "llmkit"),
+            name: "LLMKit"
+            dependencies: [
+                .product(name: "LLM", package: "LLM")
+            ]),
         .testTarget(
-            name: "llmkitTests",
-            dependencies: ["llmkit"]
+            name: "LLMKitTests",
+            dependencies: ["LLMKit"]
         ),
     ]
 )
