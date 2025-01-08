@@ -9,7 +9,7 @@ import LLM
 import SwiftUI
 
 @Observable
-open class Model: Identifiable {
+open class ModelMetadata: Identifiable {
     public let id: String
     public let name: String
     public let url: String
