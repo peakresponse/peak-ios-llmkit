@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "peak-ios-llmkit",
+    name: "LLMKit",
     platforms: [
             .iOS(.v17)
     ],

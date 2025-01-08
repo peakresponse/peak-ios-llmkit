@@ -11,16 +11,16 @@ import SwiftUI
 @Observable
 open class Model: Identifiable {
     public let id: String
-    let name: String
-    let url: String
-    let template: Template
-    var isDownloaded: Bool
-    var isDownloading: Bool
-    var downloadedURL: URL?
-    var bytesDownloaded: Int64 = 0
-    var bytesExpected: Int64 = 0
+    public let name: String
+    public let url: String
+    public let template: Template
+    public var isDownloaded: Bool
+    public var isDownloading: Bool
+    public var downloadedURL: URL?
+    public var bytesDownloaded: Int64 = 0
+    public var bytesExpected: Int64 = 0
 
-    init(id: String, name: String, url: String, template: Template, isDownloaded: Bool, isDownloading: Bool) {
+    public init(id: String, name: String, url: String, template: Template, isDownloaded: Bool, isDownloading: Bool) {
         self.id = id
         self.name = name
         self.url = url
