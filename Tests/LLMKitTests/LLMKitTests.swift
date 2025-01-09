@@ -3,6 +3,12 @@ import Testing
 @testable import LLMKitAWSBedrock
 @testable import LLMKitLlama
 
+@Test func testLlama3Template() async throws {
+    let template = PromptTemplate.llama3("You are an expert medical secretary.")
+    let prompt = template.preprocess("This is a test", [])
+    print(prompt)
+}
+
 @MainActor @Test func testBotForModel() async throws {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
     LlamaBot.register()

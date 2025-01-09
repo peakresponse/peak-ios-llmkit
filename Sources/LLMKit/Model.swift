@@ -8,6 +8,19 @@
 import LLM
 import SwiftUI
 
+extension Template {
+    public static func llama3(_ systemPrompt: String? = nil) -> Template {
+        return Template(
+            prefix: "<|begin_of_text|>",
+            system: ("<|start_header_id|>system<|end_header_id|>", "<|eot_id|>"),
+            user: ("<|start_header_id|>user<|end_header_id|>", "<|eot_id|>"),
+            bot: ("<|start_header_id|>assistant<|end_header_id|>", "<|eot_id|>"),
+            stopSequence: "<|end_of_text|>",
+            systemPrompt: systemPrompt
+        )
+    }
+}
+
 public typealias PromptTemplate = Template
 
 public enum ModelType: String, Codable {

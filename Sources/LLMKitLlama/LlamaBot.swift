@@ -22,8 +22,7 @@ open class LlamaBot: Bot {
         if let downloadedURL = model.downloadedURL {
             llm = LLM(from: downloadedURL, template: model.template, maxTokenCount: model.maxTokenCount)
             super.init(model: model)
-            self.subscription = llm.objectWillChange.sink { [weak self] in
-                print("!!!", self?.llm.output)
+            subscription = llm.objectWillChange.sink { [weak self] in
                 self?.output = self?.llm.output ?? ""
             }
             return
@@ -32,7 +31,7 @@ open class LlamaBot: Bot {
     }
     
     deinit {
-        self.subscription = nil
+        subscription = nil
     }
     
     override public func respond(to input: String) async {
