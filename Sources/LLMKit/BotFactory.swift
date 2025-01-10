@@ -7,14 +7,15 @@
 
 import Foundation
 
+@MainActor
 public class BotFactory {
-    @MainActor private static var bots: [ModelType: Bot.Type] = [:]
+    private static var registry: [ModelType: Bot.Type] = [:]
     
-    @MainActor public static func register(_ bot: Bot.Type, for type: ModelType) {
-        BotFactory.bots[type] = bot
+    public static func register(_ bot: Bot.Type, for type: ModelType) {
+        BotFactory.registry[type] = bot
     }
     
-    @MainActor public static func instantiate(for model: Model) -> Bot? {
-        return BotFactory.bots[model.type]?.init(model: model)
+    public static func instantiate(for model: Model) -> Bot? {
+        return BotFactory.registry[model.type]?.init(model: model)
     }
 }

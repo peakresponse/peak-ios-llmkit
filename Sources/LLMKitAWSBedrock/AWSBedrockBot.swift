@@ -41,16 +41,27 @@ open class AWSBedrockBot: Bot {
         let prompt = model.template.preprocess(input, [])
         let data: [String: String] = ["prompt": prompt]
         if let json = try? JSONEncoder().encode(data) {
-            let params = InvokeModelInput(body: json, modelId: model.id)
-            do {
-                let response = await try client.invokeModel(input: params)
-                if let body = response.body {
-                    if let output = try? JSONSerialization.jsonObject(with: body) as? [String: Any] {
-                        await setOutput(to: output["generation"] as? String ?? "")
+            let params = InvokeModelWithResponseStreamInput(body: json, modelId: model.id)
+            Task {
+                do {
+                    let response = try await client.invokeModelWithResponseStream(input: params)
+                    if let body = response.body {
+                        for try await stream in body {
+                            switch stream {
+                            case .chunk(let part):
+                                if let bytes = part.bytes,
+                                   let data = try? JSONSerialization.jsonObject(with: bytes) as? [String: Any],
+                                   let generation = data["generation"] as? String {
+                                    await setOutput(to: output + generation)
+                                }
+                            case .sdkUnknown(let message):
+                                print("sdkUnknown", message)
+                            }
+                        }
                     }
+                } catch (let error) {
+                    print("throws", error)
                 }
-            } catch (let error) {
-                print(error)
             }
         }
     }

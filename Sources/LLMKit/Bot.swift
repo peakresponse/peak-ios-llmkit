@@ -19,7 +19,7 @@ open class Bot: ObservableObject {
         self.model = model
     }
     
-    open func respond(to input: String) async { }
+    @MainActor open func respond(to input: String) async { }
     
     open func stop() { }
 }

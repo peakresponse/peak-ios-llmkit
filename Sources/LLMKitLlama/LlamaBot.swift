@@ -35,7 +35,9 @@ open class LlamaBot: Bot {
     }
     
     override public func respond(to input: String) async {
-        await llm.respond(to: input)
+        Task {
+            await llm.respond(to: input)
+        }
     }
 
     override public func stop() {
