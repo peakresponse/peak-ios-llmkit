@@ -8,9 +8,12 @@
 import Foundation
 
 open class Bot: ObservableObject {
-    @Published open var output = ""
-    
-    let model: Model
+    @Published public private(set) var output = ""
+    @MainActor public func setOutput(to newOutput: consuming String) {
+        output = newOutput
+    }
+
+    public let model: Model
     
     @MainActor required public init?(model: Model) {
         self.model = model

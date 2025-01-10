@@ -23,7 +23,7 @@ open class LlamaBot: Bot {
             llm = LLM(from: downloadedURL, template: model.template, maxTokenCount: model.maxTokenCount)
             super.init(model: model)
             subscription = llm.objectWillChange.sink { [weak self] in
-                self?.output = self?.llm.output ?? ""
+                self?.setOutput(to: self?.llm.output ?? "")
             }
             return
         }
