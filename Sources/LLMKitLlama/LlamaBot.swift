@@ -23,7 +23,18 @@ open class LlamaBot: Bot {
             llm = LLM(from: downloadedURL, template: model.template, maxTokenCount: model.maxTokenCount)
             super.init(model: model)
             subscription = llm.objectWillChange.sink { [weak self] in
-                self?.setOutput(to: self?.llm.output ?? "")
+                guard let self = self else { return }
+                self.objectWillChange.send()
+                if var chat = self.history.last {
+                    if self.history.count > 3 {
+                        let prevChat = self.history[self.history.count - 3]
+                        if prevChat.content == self.llm.output {
+                            return
+                        }
+                    }
+                    chat.content = self.llm.output
+                    self.history[history.endIndex - 1] = chat
+                }
             }
             return
         }
@@ -34,13 +45,25 @@ open class LlamaBot: Bot {
         subscription = nil
     }
     
-    override public func respond(to input: String) async {
-        Task {
+    override open func respond(to input: String, isStreaming: Bool = true) async throws -> String {
+        history += [(.user, input), (.bot, "")]
+        await Task {
             await llm.respond(to: input)
+            if var chat = history.last {
+                chat.content = llm.output
+                history[history.endIndex - 1] = chat
+            }
         }
+        return llm.output
     }
 
-    override public func stop() {
+    override open func interrupt() {
         llm.stop()
+    }
+    
+    override open func reset() {
+        llm.stop()
+        llm.history = []
+        history = []
     }
 }

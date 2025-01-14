@@ -6,12 +6,12 @@
 //
 
 import Foundation
+import LLM
+
+public typealias ChatHistory = Chat
 
 open class Bot: ObservableObject {
-    @Published public private(set) var output = ""
-    @MainActor public func setOutput(to newOutput: consuming String) {
-        output = newOutput
-    }
+    @Published public var history: [ChatHistory] = []
 
     public let model: Model
     
@@ -19,7 +19,11 @@ open class Bot: ObservableObject {
         self.model = model
     }
     
-    @MainActor open func respond(to input: String) async { }
-    
-    open func stop() { }
+    @MainActor open func respond(to input: String, isStreaming: Bool = true) async throws -> String {
+        return ""
+    }
+
+    @MainActor open func interrupt() { }
+
+    @MainActor open func reset() { }
 }

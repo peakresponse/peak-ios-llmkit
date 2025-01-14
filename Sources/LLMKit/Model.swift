@@ -12,12 +12,16 @@ extension Template {
     public static func llama3(_ systemPrompt: String? = nil) -> Template {
         return Template(
             prefix: "<|begin_of_text|>",
-            system: ("<|start_header_id|>system<|end_header_id|>", "<|eot_id|>"),
-            user: ("<|start_header_id|>user<|end_header_id|>", "<|eot_id|>"),
-            bot: ("<|start_header_id|>assistant<|end_header_id|>", "<|eot_id|>"),
+            system: ("<|start_header_id|>system<|end_header_id|>\n\n", "<|eot_id|>"),
+            user: ("<|start_header_id|>user<|end_header_id|>\n\n", "<|eot_id|>"),
+            bot: ("<|start_header_id|>assistant<|end_header_id|>\n\n", "<|eot_id|>"),
             stopSequence: "<|end_of_text|>",
             systemPrompt: systemPrompt
         )
+    }
+    
+    func withSystemPrompt(_ systemPrompt: String?) -> Template {
+        return Template(prefix: prefix, system: system, user: user, bot: bot, stopSequence: stopSequence, systemPrompt: systemPrompt)
     }
 }
 
@@ -41,8 +45,9 @@ open class Model: Identifiable {
     public var downloadedURL: URL?
     public var bytesDownloaded: Int64 = 0
     public var bytesExpected: Int64 = 0
+    public var isStreaming: Bool = true
 
-    public init(type: ModelType = .gguf, id: String, name: String, template: PromptTemplate, maxTokenCount: Int32 = 1000, url: String = "", isDownloaded: Bool = false, isDownloading: Bool = false) {
+    public init(type: ModelType = .gguf, id: String, name: String, template: PromptTemplate, maxTokenCount: Int32 = 1000, url: String = "", isDownloaded: Bool = false, isDownloading: Bool = false, isStreaming: Bool = true) {
         self.type = type
         self.id = id
         self.name = name
@@ -50,5 +55,6 @@ open class Model: Identifiable {
         self.template = template
         self.isDownloaded = isDownloaded
         self.isDownloading = isDownloading
+        self.isStreaming = isStreaming
     }
 }
