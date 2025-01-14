@@ -32,8 +32,7 @@ public enum ModelType: String, Codable {
     case awsBedrock
 }
 
-@Observable
-open class Model: Identifiable {
+open class Model: ObservableObject, Identifiable {
     public let type: ModelType
     public let id: String
     public let name: String
