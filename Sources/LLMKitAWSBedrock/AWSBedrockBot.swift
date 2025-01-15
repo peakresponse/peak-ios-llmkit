@@ -14,11 +14,13 @@ open class AWSBedrockBot: Bot {
     @MainActor public static var region: String = "us-east-1"
     @MainActor public static var accessKeyId: String = ""
     @MainActor public static var secretAccessKey: String = ""
+    @MainActor public static var sessionToken: String?
     
-    @MainActor public static func configure(region: String, accessKeyId: String, secretAccessKey: String) {
+    @MainActor public static func configure(region: String, accessKeyId: String, secretAccessKey: String, sessionToken: String? = nil) {
         AWSBedrockBot.region = region
         AWSBedrockBot.accessKeyId = accessKeyId
         AWSBedrockBot.secretAccessKey = secretAccessKey
+        AWSBedrockBot.sessionToken = sessionToken
     }
     
     @MainActor public static func register() {
@@ -30,7 +32,7 @@ open class AWSBedrockBot: Bot {
     private var shouldContinuePredicting = false
     
     required public init?(model: Model) {
-        if let identityResolver = try? StaticAWSCredentialIdentityResolver(AWSCredentialIdentity(accessKey: AWSBedrockBot.accessKeyId, secret: AWSBedrockBot.secretAccessKey)),
+        if let identityResolver = try? StaticAWSCredentialIdentityResolver(AWSCredentialIdentity(accessKey: AWSBedrockBot.accessKeyId, secret: AWSBedrockBot.secretAccessKey, sessionToken: AWSBedrockBot.sessionToken)),
            let config = try? BedrockRuntimeClient.BedrockRuntimeClientConfiguration(awsCredentialIdentityResolver: identityResolver, region: AWSBedrockBot.region) {
             client = BedrockRuntimeClient(config: config)
             super.init(model: model)
