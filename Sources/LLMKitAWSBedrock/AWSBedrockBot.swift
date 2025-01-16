@@ -50,7 +50,7 @@ open class AWSBedrockBot: Bot {
         if isStreaming {
             let params = InvokeModelWithResponseStreamInput(body: json, modelId: model.id)
             shouldContinuePredicting = true
-            await Task {
+            let result = Task {
                 do {
                     let response = try await client.invokeModelWithResponseStream(input: params)
                     if let body = response.body {
@@ -72,15 +72,16 @@ open class AWSBedrockBot: Bot {
                             }
                         }
                     }
+                    return output
                 } catch (let error) {
                     throw error
                 }
             }
-            return output
+            return try await result.value
         }
         // non-streaming
         let params = InvokeModelInput(body: json, modelId: model.id)
-        await Task {
+        let result = Task {
             do {
                 let response = try await client.invokeModel(input: params)
                 if let body = response.body {
@@ -90,11 +91,12 @@ open class AWSBedrockBot: Bot {
                         self.history = history + [(.user, input), (.bot, output)]
                     }
                 }
+                return output
             } catch (let error) {
                 throw error
             }
         }
-        return output
+        return try await result.value
     }
     
     open override func interrupt() {

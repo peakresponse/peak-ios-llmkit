@@ -47,14 +47,15 @@ open class LlamaBot: Bot {
     
     override open func respond(to input: String, isStreaming: Bool = true) async throws -> String {
         history += [(.user, input), (.bot, "")]
-        await Task {
+        let result = Task {
             await llm.respond(to: input)
             if var chat = history.last {
                 chat.content = llm.output
                 history[history.endIndex - 1] = chat
             }
+            return llm.output
         }
-        return llm.output
+        return await result.value
     }
 
     override open func interrupt() {
