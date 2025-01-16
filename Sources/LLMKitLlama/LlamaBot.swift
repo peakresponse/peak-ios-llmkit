@@ -45,7 +45,7 @@ open class LlamaBot: Bot {
         subscription = nil
     }
     
-    override open func respond(to input: String, isStreaming: Bool = true) async throws -> String {
+    override open func respond(to input: String, isStreaming: Bool = true) async throws -> BotResponse {
         history += [(.user, input), (.bot, "")]
         let result = Task {
             await llm.respond(to: input)
@@ -55,7 +55,7 @@ open class LlamaBot: Bot {
             }
             return llm.output
         }
-        return await result.value
+        return BotResponse(text: await result.value)
     }
 
     override open func interrupt() {

@@ -41,7 +41,7 @@ open class AWSBedrockBot: Bot {
         return nil
     }
     
-    open override func respond(to input: String, isStreaming: Bool = true) async throws -> String {
+    open override func respond(to input: String, isStreaming: Bool = true) async throws -> BotResponse {
         var output = ""
         let history = self.history
         let prompt = model.template.preprocess(input, history)
@@ -77,7 +77,7 @@ open class AWSBedrockBot: Bot {
                     throw error
                 }
             }
-            return try await result.value
+            return BotResponse(text: try await result.value)
         }
         // non-streaming
         let params = InvokeModelInput(body: json, modelId: model.id)
@@ -96,7 +96,7 @@ open class AWSBedrockBot: Bot {
                 throw error
             }
         }
-        return try await result.value
+        return BotResponse(text: try await result.value)
     }
     
     open override func interrupt() {
