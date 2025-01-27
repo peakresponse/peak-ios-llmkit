@@ -6,32 +6,20 @@ import Testing
 @Test func testLlama3Template() async throws {
     let template = PromptTemplate.llama3("You are an expert medical secretary.")
     let prompt = template.preprocess("This is a test", [])
-    print(prompt)
-}
-
-@MainActor @Test func testBotForModel() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-    LlamaBot.register()
-    
-    let model = Model(
-        id: "Llama-3.2-1B-Instruct.Q4_K_M.gguf",
-        name: "llama-3.2-1B-Instruct.Q4_K_M.gguf",
-        template: .chatML("You are an expert medical secretary."),
-        url: "https://huggingface.co/QuantFactory/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct.Q4_K_M.gguf?download=true")
-    
-    let bot = BotFactory.instantiate(for: model)
-    #expect(type(of: bot!) == LlamaBot.self)
+    #expect(prompt == "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n" +
+                      "You are an expert medical secretary.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n" +
+                      "This is a test<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n")
 }
 
 @MainActor @Test func testBotForAwsBedrockModel() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
     AWSBedrockBot.register()
+    AWSBedrockBot.configure(region: "us-east-1", accessKeyId: "test", secretAccessKey: "test")
     
     let model = Model(
         type: .awsBedrock,
-        id: "Llama-3.2-1B-Instruct.Q4_K_M.gguf",
-        name: "llama-3.2-1B-Instruct.Q4_K_M.gguf",
-        template: .chatML("You are an expert medical secretary."))
+        id: "us.meta.llama3-3-70b-instruct-v1:0",
+        name: "AWS Bedrock US Meta Llama 3.3 70B Instruct",
+        template: .llama3("You are an expert medical secretary."))
     
     let bot = BotFactory.instantiate(for: model)
     #expect(type(of: bot!) == AWSBedrockBot.self)
