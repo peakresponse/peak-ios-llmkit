@@ -1,6 +1,8 @@
 # LLMKit
 
-LLMKit is an iOS Swift Package to provide a streamlined API for LLM interaction, both local (through llamap.cpp) and remote.
+LLMKit is an iOS Swift Package to provide a streamlined API for LLM interaction, both local (through [llama.cpp](https://github.com/ggerganov/llama.cpp) and [LLM.swift](https://github.com/eastriverlee/LLM.swift)) and remote.
+
+Current remote LLM API supported is AWS Bedrock (through [aws-sdk-swift](https://github.com/awslabs/aws-sdk-swift)).
 
 ## Example
 
