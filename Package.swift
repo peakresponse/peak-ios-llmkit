@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "LLMKit",
     platforms: [
-            .iOS(.v15)
+        .macOS(.v14),
+        .iOS(.v15),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -15,7 +16,7 @@ let package = Package(
             targets: ["LLMKit", "LLMKitAWSBedrock", "LLMKitLlama"])
     ],
     dependencies: [
-        .package(url: "https://github.com/eastriverlee/LLM.swift", branch: "pinned"),
+        .package(url: "https://github.com/eastriverlee/LLM.swift", branch: "main"),
         .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "1.0.0")
     ],
     targets: [
