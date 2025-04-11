@@ -1,5 +1,5 @@
 {
-  "originHash" : "1cae05248259402243842ebd22f702ab3aff1be4fccf8ab6f5d5491b302429b7",
+  "originHash" : "718aa994700ee72192ec813dba021aebd26a56ee1088fb90294e02180d82f4cb",
   "pins" : [
     {
       "identity" : "aws-crt-swift",
@@ -20,20 +20,12 @@
       }
     },
     {
-      "identity" : "llama.cpp",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ggerganov/llama.cpp/",
-      "state" : {
-        "revision" : "cda0e4b648dde8fac162b3430b14a99597d3d74f"
-      }
-    },
-    {
       "identity" : "llm.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eastriverlee/LLM.swift",
       "state" : {
-        "branch" : "pinned",
-        "revision" : "48546489c46c8d116a320ad6bc031bbd714fd8c0"
+        "branch" : "main",
+        "revision" : "7584d0736fce6ec032ab357ee63a8e7b00c64d96"
       }
     },
     {

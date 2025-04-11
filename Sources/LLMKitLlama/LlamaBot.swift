@@ -19,8 +19,8 @@ open class LlamaBot: Bot {
     private var subscription: AnyCancellable?
     
     required public init?(model: LLMKit.Model) {
-        if let downloadedURL = model.downloadedURL {
-            llm = LLM(from: downloadedURL, template: model.template, maxTokenCount: model.maxTokenCount)
+        if let downloadedURL = model.downloadedURL, let llm = LLM(from: downloadedURL, template: model.template, maxTokenCount: model.maxTokenCount) {
+            self.llm = llm
             super.init(model: model)
             subscription = llm.objectWillChange.sink { [weak self] in
                 guard let self = self else { return }
