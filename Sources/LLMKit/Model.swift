@@ -5,27 +5,7 @@
 //  Created by Francis Li on 1/7/25.
 //
 
-import LLM
 import SwiftUI
-
-extension Template {
-    public static func llama3(_ systemPrompt: String? = nil) -> Template {
-        return Template(
-            prefix: "<|begin_of_text|>",
-            system: ("<|start_header_id|>system<|end_header_id|>\n\n", "<|eot_id|>"),
-            user: ("<|start_header_id|>user<|end_header_id|>\n\n", "<|eot_id|>"),
-            bot: ("<|start_header_id|>assistant<|end_header_id|>\n\n", "<|eot_id|>"),
-            stopSequence: "<|end_of_text|>",
-            systemPrompt: systemPrompt
-        )
-    }
-    
-    func withSystemPrompt(_ systemPrompt: String?) -> Template {
-        return Template(prefix: prefix, system: system, user: user, bot: bot, stopSequence: stopSequence, systemPrompt: systemPrompt)
-    }
-}
-
-public typealias PromptTemplate = Template
 
 public enum ModelType: String, Codable {
     case gguf

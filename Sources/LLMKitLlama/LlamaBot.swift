@@ -10,6 +10,18 @@ import Combine
 import LLM
 import LLMKit
 
+extension PromptTemplate {
+    func asLLMTemplate() -> Template {
+        return Template(prefix: prefix,
+                        system: system,
+                        user: user,
+                        bot: bot,
+                        stopSequence: stopSequence,
+                        systemPrompt: systemPrompt,
+                        shouldDropLast: shouldDropLast)
+    }
+}
+
 open class LlamaBot: Bot {
     @MainActor public static func register() {
         BotFactory.register(LlamaBot.self, for: .gguf)
@@ -19,7 +31,7 @@ open class LlamaBot: Bot {
     private var subscription: AnyCancellable?
     
     required public init?(model: LLMKit.Model) {
-        if let downloadedURL = model.downloadedURL, let llm = LLM(from: downloadedURL, template: model.template, maxTokenCount: model.maxTokenCount) {
+        if let downloadedURL = model.downloadedURL, let llm = LLM(from: downloadedURL, template: model.template.asLLMTemplate(), maxTokenCount: model.maxTokenCount) {
             self.llm = llm
             super.init(model: model)
             subscription = llm.objectWillChange.sink { [weak self] in
