@@ -6,9 +6,13 @@
 //
 
 import Foundation
-import LLM
 
-public typealias ChatHistory = Chat
+public enum Role {
+    case user
+    case bot
+}
+
+public typealias ChatRecord = (role: Role, content: String)
 
 public struct BotResponse {
     public let text: String
@@ -33,7 +37,7 @@ public struct BotResponse {
 }
 
 open class Bot: ObservableObject {
-    @Published public var history: [ChatHistory] = []
+    @Published public var history: [ChatRecord] = []
 
     public let model: Model
     
