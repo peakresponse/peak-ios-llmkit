@@ -1,0 +1,4 @@
+global_secrets:
+  - awsBedrockRegion
+  - awsBedrockAccessKeyId
+  - awsBedrockSecretAccessKey
