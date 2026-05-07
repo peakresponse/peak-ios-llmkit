@@ -13,10 +13,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(name: "LLMKit", targets: ["LLMKit"]),
         .library(name: "LLMKitAWSBedrock", targets: ["LLMKitAWSBedrock"]),
-        .library(name: "LLMKitLlama", targets: ["LLMKitLlama"])
     ],
     dependencies: [
-        .package(url: "https://github.com/eastriverlee/LLM.swift", branch: "main"),
         .package(url: "https://github.com/awslabs/aws-sdk-swift", from: "1.0.0")
     ],
     targets: [
@@ -30,14 +28,8 @@ let package = Package(
                 "LLMKit",
                 .product(name: "AWSBedrockRuntime", package: "aws-sdk-swift")
             ]),
-        .target(
-            name: "LLMKitLlama",
-            dependencies: [
-                "LLMKit",
-                .product(name: "LLM", package: "LLM.swift")
-            ]),
         .testTarget(
             name: "LLMKitTests",
-            dependencies: ["LLMKit", "LLMKitAWSBedrock", "LLMKitLlama"])
+            dependencies: ["LLMKit", "LLMKitAWSBedrock"])
     ]
 )
