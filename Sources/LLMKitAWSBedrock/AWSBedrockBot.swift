@@ -5,8 +5,8 @@
 //  Created by Francis Li on 1/7/25.
 //
 
-import AWSBedrockRuntime
-import AWSSDKIdentity
+@preconcurrency import AWSBedrockRuntime
+@preconcurrency import AWSSDKIdentity
 import Foundation
 import LLMKit
 
