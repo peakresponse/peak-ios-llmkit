@@ -126,11 +126,6 @@ struct ModelsView: View {
             })
             .task {
                 let models: [Model] = [
-                    Model(
-                        id: "Llama-3.2-1B-Instruct.Q4_K_M.gguf",
-                        name: "llama-3.2-1B-Instruct.Q4_K_M.gguf",
-                        template: .llama3("You are an expert medical secretary."),
-                        url: "https://huggingface.co/QuantFactory/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct.Q4_K_M.gguf?download=true"),
                     Model(type: .awsBedrock,
                           id: "us.meta.llama3-3-70b-instruct-v1:0",
                           name: "AWS Bedrock US Meta Llama 3.3 70B Instruct",
