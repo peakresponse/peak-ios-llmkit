@@ -60,13 +60,13 @@ open class AWSBedrockBot: Bot {
                     return output
                 }
             case .sdkUnknown(let error):
-                print(error)
+                throw BotError.unexpected(error)
             }
         }
         return ""
     }
     
-    open override func invoke(promptId: String, with variables: [String : Any]) async throws -> BotResponse {
+    open func invoke(promptId: String, with variables: [String : Any]) async throws -> BotResponse {
         var promptVariables: [String: BedrockRuntimeClientTypes.PromptVariableValues] = [:]
         for (key, value) in variables {
             promptVariables[key] = .text(String(describing: value))

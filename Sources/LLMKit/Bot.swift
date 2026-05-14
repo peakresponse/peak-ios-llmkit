@@ -9,7 +9,7 @@ import Foundation
 
 public enum BotError: Error {
     case unsupported
-    case unexpected(Error)
+    case unexpected(String)
 }
 
 public enum Role {
@@ -48,10 +48,6 @@ open class Bot: ObservableObject {
     
     @MainActor required public init?(model: Model) {
         self.model = model
-    }
-
-    @MainActor open func invoke(promptId: String, with variables: [String: Any]) async throws -> BotResponse {
-        throw BotError.unsupported
     }
 
     @MainActor open func respond(to input: String) async throws -> BotResponse {
