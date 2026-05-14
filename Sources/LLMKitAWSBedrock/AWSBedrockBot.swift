@@ -43,6 +43,28 @@ open class AWSBedrockBot: Bot {
         }
         return nil
     }
+
+    @MainActor
+    open func invoke(input: ConverseInput) async throws -> String {
+        let response = try await client.converse(input: input)
+        if let output = response.output {
+            switch (output) {
+            case .message(let message):
+                if let content = message.content {
+                    var output = ""
+                    for block in content {
+                        if case let .text(text) = block {
+                            output += text
+                        }
+                    }
+                    return output
+                }
+            case .sdkUnknown(let error):
+                print(error)
+            }
+        }
+        return ""
+    }
     
     open override func invoke(promptId: String, with variables: [String : Any]) async throws -> BotResponse {
         var promptVariables: [String: BedrockRuntimeClientTypes.PromptVariableValues] = [:]
@@ -53,37 +75,12 @@ open class AWSBedrockBot: Bot {
             modelId: promptId,
             promptVariables: promptVariables
         )
-        let result = Task {
-            do {
-                let response = try await client.converse(input: converseInput)
-                if let output = response.output {
-                    switch (output) {
-                    case .message(let message):
-                        if let content = message.content {
-                            var output = ""
-                            for block in content {
-                                if case let .text(text) = block {
-                                    output += text
-                                }
-                            }
-                            return output
-                        }
-                    case .sdkUnknown(let error):
-                        print(error)
-                    }
-                }
-                return ""
-            } catch (let error) {
-                throw error
-            }
-        }
-        let output = try await result.value
+        let output = try await invoke(input: converseInput)
         return BotResponse(text: output)
     }
 
     open override func respond(to input: String) async throws -> BotResponse {
         history.append((.user, input))
-
         let messages: [BedrockRuntimeClientTypes.Message] = [
             .init(content: [.text(input)],
                   role: .user)
@@ -99,32 +96,7 @@ open class AWSBedrockBot: Bot {
             modelId: model.id,
             system: system
         )
-
-        let result = Task {
-            do {
-                let response = try await client.converse(input: converseInput)
-                if let output = response.output {
-                    switch (output) {
-                    case .message(let message):
-                        if let content = message.content {
-                            var output = ""
-                            for block in content {
-                                if case let .text(text) = block {
-                                    output += text
-                                }
-                            }
-                            return output
-                        }
-                    case .sdkUnknown(let error):
-                        print(error)
-                    }
-                }
-                return ""
-            } catch (let error) {
-                throw error
-            }
-        }
-        let output = try await result.value
+        let output = try await invoke(input: converseInput)
         history.append((.bot, output))
         return BotResponse(text: output)
     }
@@ -138,3 +110,4 @@ open class AWSBedrockBot: Bot {
         history = []
     }
 }
+
