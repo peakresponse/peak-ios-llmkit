@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum BotError: Error {
+    case unsupported
+    case unexpected(String)
+}
+
 public enum Role {
     case user
     case bot
@@ -44,9 +49,9 @@ open class Bot: ObservableObject {
     @MainActor required public init?(model: Model) {
         self.model = model
     }
-    
-    @MainActor open func respond(to input: String, isStreaming: Bool = true) async throws -> BotResponse {
-        return BotResponse(text: "")
+
+    @MainActor open func respond(to input: String) async throws -> BotResponse {
+        throw BotError.unsupported
     }
 
     @MainActor open func interrupt() { }

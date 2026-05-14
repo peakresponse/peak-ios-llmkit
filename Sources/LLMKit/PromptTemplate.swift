@@ -21,7 +21,7 @@ public struct PromptTemplate: Sendable {
         user: Attachment? = nil,
         bot: Attachment? = nil,
         stopSequence: String? = nil,
-        systemPrompt: String?,
+        systemPrompt: String? = nil,
         shouldDropLast: Bool = false
     ) {
         self.system = system ?? ("", "")
@@ -112,7 +112,7 @@ public struct PromptTemplate: Sendable {
             systemPrompt: systemPrompt
         )
     }
-    
+
     func withSystemPrompt(_ systemPrompt: String?) -> PromptTemplate {
         return PromptTemplate(prefix: prefix, system: system, user: user, bot: bot, stopSequence: stopSequence, systemPrompt: systemPrompt)
     }

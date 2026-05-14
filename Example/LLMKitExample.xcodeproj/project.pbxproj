@@ -8,14 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		450601392D307B45001AE970 /* ArkanaKeys in Frameworks */ = {isa = PBXBuildFile; productRef = 450601382D307B45001AE970 /* ArkanaKeys */; };
-		4536D3C22FAD0FCC001ACA32 /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 45728ACE2D2DE2BC006A3F43 /* LLMKit */; };
-		4536D3C32FAD0FCC001ACA32 /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 45728AE42D2DE474006A3F43 /* LLMKit */; };
-		4536D3C42FAD0FCC001ACA32 /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 45BA5A472D2DEF5D006FB2F7 /* LLMKit */; };
-		4536D3C52FAD0FCC001ACA32 /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 45BA5A4A2D2DF02A006FB2F7 /* LLMKit */; };
-		4536D3C62FAD0FCC001ACA32 /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 45A3FC9F2D2DF20C008B9D35 /* LLMKit */; };
-		4536D3DC2FAD101D001ACA32 /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4536D3DB2FAD101D001ACA32 /* LLMKit */; };
-		4536D3DE2FAD101D001ACA32 /* LLMKitAWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 4536D3DD2FAD101D001ACA32 /* LLMKitAWSBedrock */; };
-		45EF91992DAECA3000563A0A /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 45D4ED132D2EF50E007D9769 /* LLMKit */; };
+		4583AF892FB54086007D7F7E /* LLMKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4536D3DB2FAD101D001ACA32 /* LLMKit */; };
+		4583AF8A2FB54086007D7F7E /* LLMKitAWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = 4536D3DD2FAD101D001ACA32 /* LLMKitAWSBedrock */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,14 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4536D3C62FAD0FCC001ACA32 /* LLMKit in Frameworks */,
-				4536D3C52FAD0FCC001ACA32 /* LLMKit in Frameworks */,
-				4536D3C42FAD0FCC001ACA32 /* LLMKit in Frameworks */,
-				4536D3DC2FAD101D001ACA32 /* LLMKit in Frameworks */,
-				4536D3C32FAD0FCC001ACA32 /* LLMKit in Frameworks */,
-				4536D3DE2FAD101D001ACA32 /* LLMKitAWSBedrock in Frameworks */,
-				4536D3C22FAD0FCC001ACA32 /* LLMKit in Frameworks */,
-				45EF91992DAECA3000563A0A /* LLMKit in Frameworks */,
+				4583AF8A2FB54086007D7F7E /* LLMKitAWSBedrock in Frameworks */,
+				4583AF892FB54086007D7F7E /* LLMKit in Frameworks */,
 				450601392D307B45001AE970 /* ArkanaKeys in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,7 +223,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				450601372D307B45001AE970 /* XCLocalSwiftPackageReference "ArkanaKeys/ArkanaKeys" */,
-				4536D3DA2FAD101D001ACA32 /* XCLocalSwiftPackageReference "../../llmkit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 45728A8F2D2DDFD0006A3F43 /* Products */;
@@ -601,10 +588,6 @@
 		450601372D307B45001AE970 /* XCLocalSwiftPackageReference "ArkanaKeys/ArkanaKeys" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ArkanaKeys/ArkanaKeys;
-		};
-		4536D3DA2FAD101D001ACA32 /* XCLocalSwiftPackageReference "../../llmkit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../../llmkit;
 		};
 /* End XCLocalSwiftPackageReference section */
 

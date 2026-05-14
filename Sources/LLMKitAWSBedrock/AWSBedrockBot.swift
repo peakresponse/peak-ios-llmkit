@@ -32,71 +32,73 @@ open class AWSBedrockBot: Bot {
     private var shouldContinuePredicting = false
     
     required public init?(model: Model) {
-        if let identityResolver = try? StaticAWSCredentialIdentityResolver(AWSCredentialIdentity(accessKey: AWSBedrockBot.accessKeyId, secret: AWSBedrockBot.secretAccessKey, sessionToken: AWSBedrockBot.sessionToken)),
-           let config = try? BedrockRuntimeClient.BedrockRuntimeClientConfiguration(awsCredentialIdentityResolver: identityResolver, region: AWSBedrockBot.region) {
+        let identityResolver = StaticAWSCredentialIdentityResolver(AWSCredentialIdentity(accessKey: AWSBedrockBot.accessKeyId,
+                                                                                         secret: AWSBedrockBot.secretAccessKey,
+                                                                                         sessionToken: AWSBedrockBot.sessionToken))
+        if let config = try? BedrockRuntimeClient.BedrockRuntimeClientConfig(awsCredentialIdentityResolver: identityResolver,
+                                                                             region: AWSBedrockBot.region) {
             client = BedrockRuntimeClient(config: config)
             super.init(model: model)
             return
         }
         return nil
     }
-    
-    open override func respond(to input: String, isStreaming: Bool = true) async throws -> BotResponse {
-        var output = ""
-        let history = self.history
-        let prompt = model.template.preprocess(input, history)
-        let data: [String: String] = ["prompt": prompt]
-        let json = try JSONEncoder().encode(data)
-        if isStreaming {
-            let params = InvokeModelWithResponseStreamInput(body: json, modelId: model.id)
-            shouldContinuePredicting = true
-            let result = Task {
-                do {
-                    let response = try await client.invokeModelWithResponseStream(input: params)
-                    if let body = response.body {
-                        for try await stream in body {
-                            if !shouldContinuePredicting {
-                                break
-                            }
-                            switch stream {
-                            case .chunk(let part):
-                                if let bytes = part.bytes,
-                                   let data = try? JSONSerialization.jsonObject(with: bytes) as? [String: Any],
-                                   let generation = data["generation"] as? String {
-                                    output += generation
-                                    self.history = history + [(.user, input), (.bot, output)]
-                                }
-                            case .sdkUnknown(let message):
-                                print("sdkUnknown", message)
-                                break
-                            }
+
+    @MainActor
+    open func invoke(input: ConverseInput) async throws -> String {
+        let response = try await client.converse(input: input)
+        if let output = response.output {
+            switch (output) {
+            case .message(let message):
+                if let content = message.content {
+                    var output = ""
+                    for block in content {
+                        if case let .text(text) = block {
+                            output += text
                         }
                     }
                     return output
-                } catch (let error) {
-                    throw error
                 }
-            }
-            return BotResponse(text: try await result.value)
-        }
-        // non-streaming
-        let params = InvokeModelInput(body: json, modelId: model.id)
-        let result = Task {
-            do {
-                let response = try await client.invokeModel(input: params)
-                if let body = response.body {
-                    if let data = try JSONSerialization.jsonObject(with: body, options: []) as? [String: Any],
-                       let generation = data["generation"] as? String {
-                        output = generation
-                        self.history = history + [(.user, input), (.bot, output)]
-                    }
-                }
-                return output
-            } catch (let error) {
-                throw error
+            case .sdkUnknown(let error):
+                throw BotError.unexpected(error)
             }
         }
-        return BotResponse(text: try await result.value)
+        return ""
+    }
+    
+    open func invoke(promptId: String, with variables: [String : Any]) async throws -> BotResponse {
+        var promptVariables: [String: BedrockRuntimeClientTypes.PromptVariableValues] = [:]
+        for (key, value) in variables {
+            promptVariables[key] = .text(String(describing: value))
+        }
+        let converseInput = ConverseInput(
+            modelId: promptId,
+            promptVariables: promptVariables
+        )
+        let output = try await invoke(input: converseInput)
+        return BotResponse(text: output)
+    }
+
+    open override func respond(to input: String) async throws -> BotResponse {
+        history.append((.user, input))
+        let messages: [BedrockRuntimeClientTypes.Message] = [
+            .init(content: [.text(input)],
+                  role: .user)
+        ]
+        var system: [BedrockRuntimeClientTypes.SystemContentBlock]? = nil
+        if let systemPrompt = model.template.systemPrompt {
+            system = [
+                .text(systemPrompt)
+            ]
+        }
+        let converseInput = ConverseInput(
+            messages: messages,
+            modelId: model.id,
+            system: system
+        )
+        let output = try await invoke(input: converseInput)
+        history.append((.bot, output))
+        return BotResponse(text: output)
     }
     
     open override func interrupt() {
@@ -108,3 +110,4 @@ open class AWSBedrockBot: Bot {
         history = []
     }
 }
+
