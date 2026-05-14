@@ -21,7 +21,7 @@ public struct PromptTemplate: Sendable {
         user: Attachment? = nil,
         bot: Attachment? = nil,
         stopSequence: String? = nil,
-        systemPrompt: String?,
+        systemPrompt: String? = nil,
         shouldDropLast: Bool = false
     ) {
         self.system = system ?? ("", "")

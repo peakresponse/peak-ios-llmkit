@@ -25,7 +25,7 @@ open class Model: ObservableObject, Identifiable {
     public var bytesDownloaded: Int64 = 0
     public var bytesExpected: Int64 = 0
 
-    public init(type: ModelType = .gguf, id: String, name: String, template: PromptTemplate, maxTokenCount: Int32 = 1000, url: String = "", isDownloaded: Bool = false, isDownloading: Bool = false) {
+    public init(type: ModelType = .gguf, id: String = "", name: String = "", template: PromptTemplate = .init(), maxTokenCount: Int32 = 1000, url: String = "", isDownloaded: Bool = false, isDownloading: Bool = false) {
         self.type = type
         self.id = id
         self.name = name
