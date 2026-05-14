@@ -44,6 +44,43 @@ open class AWSBedrockBot: Bot {
         return nil
     }
     
+    open override func invoke(promptId: String, with variables: [String : Any]) async throws -> BotResponse {
+        var promptVariables: [String: BedrockRuntimeClientTypes.PromptVariableValues] = [:]
+        for (key, value) in variables {
+            promptVariables[key] = .text(String(describing: value))
+        }
+        let converseInput = ConverseInput(
+            modelId: promptId,
+            promptVariables: promptVariables
+        )
+        let result = Task {
+            do {
+                let response = try await client.converse(input: converseInput)
+                if let output = response.output {
+                    switch (output) {
+                    case .message(let message):
+                        if let content = message.content {
+                            var output = ""
+                            for block in content {
+                                if case let .text(text) = block {
+                                    output += text
+                                }
+                            }
+                            return output
+                        }
+                    case .sdkUnknown(let error):
+                        print(error)
+                    }
+                }
+                return ""
+            } catch (let error) {
+                throw error
+            }
+        }
+        let output = try await result.value
+        return BotResponse(text: output)
+    }
+
     open override func respond(to input: String) async throws -> BotResponse {
         history.append((.user, input))
 

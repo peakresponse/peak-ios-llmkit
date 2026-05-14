@@ -133,7 +133,7 @@ struct ModelsView: View {
                     Model(type: .awsBedrock,
                           id: "us.amazon.nova-2-lite-v1:0",
                           name: "AWS Bedrock Nova 2 Lite",
-                          template: .nova("You are an emergency medical services provider.")),
+                          template: .init(systemPrompt: "You are an emergency medical services provider.")),
                 ]
                 if let downloaded = try? ModelManager.shared.list() {
                     for url in downloaded {

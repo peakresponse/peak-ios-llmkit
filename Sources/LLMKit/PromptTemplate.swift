@@ -112,7 +112,7 @@ public struct PromptTemplate: Sendable {
             systemPrompt: systemPrompt
         )
     }
-    
+
     func withSystemPrompt(_ systemPrompt: String?) -> PromptTemplate {
         return PromptTemplate(prefix: prefix, system: system, user: user, bot: bot, stopSequence: stopSequence, systemPrompt: systemPrompt)
     }
