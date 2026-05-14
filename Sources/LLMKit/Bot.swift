@@ -45,7 +45,7 @@ open class Bot: ObservableObject {
         self.model = model
     }
     
-    @MainActor open func respond(to input: String, isStreaming: Bool = true) async throws -> BotResponse {
+    @MainActor open func respond(to input: String) async throws -> BotResponse {
         return BotResponse(text: "")
     }
 

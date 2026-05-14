@@ -129,7 +129,11 @@ struct ModelsView: View {
                     Model(type: .awsBedrock,
                           id: "us.meta.llama3-3-70b-instruct-v1:0",
                           name: "AWS Bedrock US Meta Llama 3.3 70B Instruct",
-                          template: .llama3("You are an expert medical secretary."))
+                          template: .llama3("You are an expert medical secretary.")),
+                    Model(type: .awsBedrock,
+                          id: "us.amazon.nova-2-lite-v1:0",
+                          name: "AWS Bedrock Nova 2 Lite",
+                          template: .nova("You are an emergency medical services provider.")),
                 ]
                 if let downloaded = try? ModelManager.shared.list() {
                     for url in downloaded {
